@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Buy shares
+{% endblock %}
+
+{% block main %}
+    <div class="section">
+        <form action="/funds" method="post">
+            <div class="form-group">
+                <input autocomplete="off" class="form-control" name="funds" placeholder="Amount" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Add Funds</button>
+        </form>
+    </div>
+    <div>
+        <h5>Cash on hand: {{ cash | usd }}</h5>
+    </div>
+    {% if quote %}
+    <div class="section">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ quote['symbol'] }}</td>
+                    <td>{{ quote['name'] }}</td>
+                    <td>{{ quote['price'] }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}
