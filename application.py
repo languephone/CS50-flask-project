@@ -133,6 +133,36 @@ def buy():
                 WHERE id = ?""", int(shares) * quote['price'], session['user_id'])
             return redirect("/")
 
+@app.route("/funds", methods=["GET", "POST"])
+@login_required
+def add_funds():
+    """Add cash to holdings"""
+
+    rows = db.execute("SELECT * FROM users WHERE id = ?", session['user_id'])
+    cash = rows[0]['cash']
+    if request.method == "GET":
+        return render_template("add_funds.html", cash=cash)
+    else:
+        funds = request.form.get("funds")
+
+        # Ensure funds entered
+        if not funds:
+            return apology("must enter funds value", 400)
+
+        # Ensure funds entered as positive integer
+        elif not funds.isnumeric() or int(funds) < 1:
+            return apology("must be a positive integer", 400)
+
+        # Ensure value not greater than $1,000,000
+        elif int(funds) > 1_000_000:
+            return apology("must be less than $1m")
+        else:
+            # Update user's cash to reflect purchase
+            db.execute("""UPDATE users\
+                SET cash = cash + ?\
+                WHERE id = ?""", int(funds), session['user_id'])
+            return redirect("/funds")
+
 
 @app.route("/history")
 @login_required
