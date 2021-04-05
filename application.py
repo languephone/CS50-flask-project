@@ -106,6 +106,48 @@ def buy():
                 WHERE id = ?""", int(shares) * quote['price'], session['user_id'])
             return redirect("/")
 
+@app.route("/funds", methods=["GET", "POST"])
+@login_required
+def add_funds():
+    """Add cash to holdings"""
+
+    rows = db.execute("SELECT * FROM users WHERE id = ?", session['user_id'])
+    cash = rows[0]['cash']
+    if request.method == "GET":
+        return render_template("add_funds.html", cash=cash)
+    else:
+        shares = request.form.get("shares")
+        quote = lookup(symbol)
+
+        # Ensure symbol is entered
+        if not request.form.get("symbol"):
+            return apology("must enter symbol", 400)
+
+        # Ensure symbol is recognized
+        elif not lookup(request.form.get("symbol")):
+            return apology("symbol not recognized", 400)
+
+        # Ensure shares entered
+        elif not shares:
+            return apology("must enter number of shares", 400)
+
+        # Ensure shares entered as positive integer
+        elif not shares.isnumeric() or int(shares) < 1:
+            return apology("shares must be positive integer", 400)
+
+        # Ensure user has enough cash to buy requested shares
+        elif int(shares) * quote['price'] > cash:
+            return apology("not enough ca$h in your account")
+        else:
+            # Enter buy transaction into database
+            db.execute("""INSERT INTO purchases (username, symbol, shares, price)\
+                VALUES (?, ?, ?, ?)""", rows[0]["username"], symbol, shares, quote['price'])
+            # Update user's cash to reflect purchase
+            db.execute("""UPDATE users\
+                SET cash = cash - ?\
+                WHERE id = ?""", int(shares) * quote['price'], session['user_id'])
+            return redirect("/")
+
 
 @app.route("/history")
 @login_required
