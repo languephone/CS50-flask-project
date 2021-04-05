@@ -173,7 +173,7 @@ def logout():
 def quote():
     """Get stock quote."""
     if request.method =="GET":
-        return render_template("quote.html")
+        return render_template("quote_live.html")
     else:
         # Ensure symbol was submitted
         if not request.form.get("symbol"):
