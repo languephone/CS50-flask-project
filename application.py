@@ -116,37 +116,25 @@ def add_funds():
     if request.method == "GET":
         return render_template("add_funds.html", cash=cash)
     else:
-        shares = request.form.get("shares")
-        quote = lookup(symbol)
+        funds = request.form.get("funds")
 
-        # Ensure symbol is entered
-        if not request.form.get("symbol"):
-            return apology("must enter symbol", 400)
+        # Ensure funds entered
+        if not funds:
+            return apology("must enter funds value", 400)
 
-        # Ensure symbol is recognized
-        elif not lookup(request.form.get("symbol")):
-            return apology("symbol not recognized", 400)
+        # Ensure funds entered as positive integer
+        elif not funds.isnumeric() or int(funds) < 1:
+            return apology("must be a positive integer", 400)
 
-        # Ensure shares entered
-        elif not shares:
-            return apology("must enter number of shares", 400)
-
-        # Ensure shares entered as positive integer
-        elif not shares.isnumeric() or int(shares) < 1:
-            return apology("shares must be positive integer", 400)
-
-        # Ensure user has enough cash to buy requested shares
-        elif int(shares) * quote['price'] > cash:
-            return apology("not enough ca$h in your account")
+        # Ensure value not greater than $1,000,000
+        elif int(funds) > 1_000_000:
+            return apology("must be less than $1m")
         else:
-            # Enter buy transaction into database
-            db.execute("""INSERT INTO purchases (username, symbol, shares, price)\
-                VALUES (?, ?, ?, ?)""", rows[0]["username"], symbol, shares, quote['price'])
             # Update user's cash to reflect purchase
             db.execute("""UPDATE users\
-                SET cash = cash - ?\
-                WHERE id = ?""", int(shares) * quote['price'], session['user_id'])
-            return redirect("/")
+                SET cash = cash + ?\
+                WHERE id = ?""", int(funds), session['user_id'])
+            return redirect("/funds")
 
 
 @app.route("/history")
