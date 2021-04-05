@@ -28,7 +28,11 @@
                     <td>{{ holding['shares'] }}</td>
                     <td>{{ holding['price'] | usd }}</td>
                     <td>{{ holding['value'] | usd }}</td>
-                    <td>{{ (holding['value'] - holding['cost']) | usd}}</td>
+                    {% if holding['gain_loss'] < 0 %}
+                        <td class="text-danger">{{ holding['gain_loss'] | usd }}</td>
+                    {% else %}
+                        <td class="text-success">{{ holding['gain_loss'] | usd }}</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
                 <tr>
@@ -36,12 +40,12 @@
                     <td><strong>Cash</strong></td>
                     <td></td>
                     <td></td>
-                    <td><strong>{{ user[0]['cash'] | usd}}</strong></td>
+                    <td><strong>{{ user[0]['cash'] | usd }}</strong></td>
                     <td></td>
                 </tr>
             </tbody>
             <tfoot>
-                <tr class='table-dark'>
+                <tr class="table-dark">
                     <td></td>
                     <td><strong>Total Value</strong></td>
                     <td></td>
