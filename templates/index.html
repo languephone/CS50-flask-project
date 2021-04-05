@@ -17,16 +17,18 @@
                     <th scope="col">Shares</th>
                     <th scope="col">Price</th>
                     <th scope="col">Value</th>
+                    <th scope="col">Gain/Loss</th>
                 </tr>
             </thead>
             <tbody>
-                {% for share in shares %}
+                {% for holding in holdings %}
                 <tr>
-                    <td>{{ share['symbol'] }}</td>
-                    <td>{{ share['name'] }}</td>
-                    <td>{{ share['shares'] }}</td>
-                    <td>{{ share['price'] | usd }}</td>
-                    <td>{{ share['value'] | usd }}</td>
+                    <td>{{ holding['symbol'] }}</td>
+                    <td>{{ holding['name'] }}</td>
+                    <td>{{ holding['shares'] }}</td>
+                    <td>{{ holding['price'] | usd }}</td>
+                    <td>{{ holding['value'] | usd }}</td>
+                    <td>{{ (holding['value'] - holding['cost']) | usd}}</td>
                 </tr>
                 {% endfor %}
                 <tr>
@@ -35,6 +37,7 @@
                     <td></td>
                     <td></td>
                     <td><strong>{{ user[0]['cash'] | usd}}</strong></td>
+                    <td></td>
                 </tr>
             </tbody>
             <tfoot>
@@ -43,7 +46,8 @@
                     <td><strong>Total Value</strong></td>
                     <td></td>
                     <td></td>
-                    <td><strong>{{ account | usd }}</strong></td>
+                    <td><strong>{{ user[0]['account_value'] | usd }}</strong></td>
+                    <td><strong>{{ user[0]['account_gain_loss'] | usd }}</strong></td>
                 </tr>
             </tfoot>
         </table>

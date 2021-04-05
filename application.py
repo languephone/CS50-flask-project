@@ -46,21 +46,24 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    shares = db.execute("""SELECT symbol, SUM(shares) AS shares\
+    holdings = db.execute("""SELECT symbol, SUM(shares) AS shares, SUM(shares * price) AS cost\
         FROM purchases\
         JOIN users ON users.username = purchases.username\
         WHERE users.id = ?\
         GROUP BY symbol""", session["user_id"])
+    # Get user cash info
     user = db.execute("SELECT * FROM users WHERE id = ?", session['user_id'])
-    cash = user[0]['cash']
-    account = cash
-    for share in shares:
-        share_info = lookup(share['symbol'])
-        share['price'] = share_info['price']
-        share['name'] = share_info['name']
-        share['value'] = share_info['price'] * share['shares']
-        account += share_info['price'] * share['shares']
-    return render_template("index.html", user=user, shares=shares, account=account)
+    # add total account value and total gain/loss to user dictionary
+    user[0]['account_value'] = user[0]['cash']
+    user[0]['account_gain_loss'] = 0
+    for holding in holdings:
+        holding_info = lookup(holding['symbol'])
+        holding['price'] = holding_info['price']
+        holding['name'] = holding_info['name']
+        holding['value'] = holding_info['price'] * holding['shares']
+        user[0]['account_value'] += holding_info['price'] * holding['shares']
+        user[0]['account_gain_loss'] += holding['value'] - holding['cost']
+    return render_template("index.html", user=user, holdings=holdings)
 
 
 @app.route("/buy", methods=["GET", "POST"])
