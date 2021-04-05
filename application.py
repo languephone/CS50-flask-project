@@ -173,18 +173,20 @@ def logout():
 def quote():
     """Get stock quote."""
     if request.method =="GET":
-        return render_template("quote_live.html")
+        return render_template("quote_live.html", )
     else:
-        # Ensure symbol was submitted
+        """# Ensure symbol was submitted
         if not request.form.get("symbol"):
             return apology("must provide symbol", 400)
         # Ensure symbol is recognized
         elif not lookup(request.form.get("symbol")):
-            return apology("symbol not recognized", 400)
+            return apology("symbol not recognized", 400)"""
 
+        #quote = lookup(request.args.get("symbol"))
         quote = lookup(request.form.get("symbol"))
-        # return jsonify(quote)
-        return render_template("quote.html", quote=quote, price=quote['price'])
+        print (quote)
+        #return render_template("quote_live.html", quote=quote, price=quote['price'])
+        return jsonify(quote)
 
 
 @app.route("/register", methods=["GET", "POST"])
