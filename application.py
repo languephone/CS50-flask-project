@@ -70,7 +70,7 @@ def buy():
 
     rows = db.execute("SELECT * FROM users WHERE id = ?", session['user_id'])
     cash = rows[0]['cash']
-    if request.method =="GET":
+    if request.method == "GET":
         return render_template("buy.html", cash=usd(cash))
     else:
         symbol = request.form.get("symbol").upper()
@@ -100,12 +100,12 @@ def buy():
             # Enter buy transaction into database
             db.execute("""INSERT INTO purchases (username, symbol, shares, price)\
                 VALUES (?, ?, ?, ?)""",
-                rows[0]["username"], symbol, shares, quote['price'])
+                    rows[0]["username"], symbol, shares, quote['price'])
             # Update user's cash to reflect purchase
             db.execute("""UPDATE users\
                 SET cash = cash - ?\
                 WHERE id = ?""",
-                int(shares) * quote['price'], session['user_id'])
+                    int(shares) * quote['price'], session['user_id'])
             return redirect("/")
 
 
@@ -172,20 +172,18 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    if request.method =="GET":
+    if request.method == "GET":
         return render_template("quote_live.html", )
     else:
-        """# Ensure symbol was submitted
+        # Ensure symbol was submitted
         if not request.form.get("symbol"):
             return apology("must provide symbol", 400)
         # Ensure symbol is recognized
         elif not lookup(request.form.get("symbol")):
-            return apology("symbol not recognized", 400)"""
+            return apology("symbol not recognized", 400)
 
-        #quote = lookup(request.args.get("symbol"))
         quote = lookup(request.form.get("symbol"))
-        print (quote)
-        #return render_template("quote_live.html", quote=quote, price=quote['price'])
+        # return render_template("quote_live.html", quote=quote, price=quote['price'])
         return jsonify(quote)
 
 
@@ -234,9 +232,9 @@ def sell():
         JOIN users ON users.username = purchases.username\
         WHERE users.id = ?\
         GROUP BY symbol""", session["user_id"])
-    holdings = [share['symbol'] for share in shares] # TODO refactor code to remove this variable
+    holdings = [share['symbol'] for share in shares]  # TODO refactor code to remove this variable
 
-    if request.method =="GET":
+    if request.method == "GET":
         return render_template("sell.html", holdings=holdings)
 
     else:
@@ -276,13 +274,13 @@ def sell():
             # Record sale in purchases table by adding row with negative number of shares
             db.execute("""INSERT INTO purchases (username, symbol, shares, price)\
                 VALUES (?, ?, ?, ?)""",
-                holdings[0]["username"], symbol, -shares, quote['price'])
+                    holdings[0]["username"], symbol, -shares, quote['price'])
 
             # Add value of sale back to cash in users table
             db.execute("""UPDATE users\
                 SET cash = cash + ?\
                 WHERE id = ?""",
-                shares * quote['price'], session['user_id'])
+                    shares * quote['price'], session['user_id'])
             return redirect("/")
 
 
