@@ -99,13 +99,11 @@ def buy():
         else:
             # Enter buy transaction into database
             db.execute("""INSERT INTO purchases (username, symbol, shares, price)\
-                VALUES (?, ?, ?, ?)""",
-                    rows[0]["username"], symbol, shares, quote['price'])
+                VALUES (?, ?, ?, ?)""", rows[0]["username"], symbol, shares, quote['price'])
             # Update user's cash to reflect purchase
             db.execute("""UPDATE users\
                 SET cash = cash - ?\
-                WHERE id = ?""",
-                    int(shares) * quote['price'], session['user_id'])
+                WHERE id = ?""", int(shares) * quote['price'], session['user_id'])
             return redirect("/")
 
 
@@ -184,7 +182,7 @@ def quote():
 
         quote = lookup(request.form.get("symbol"))
         return render_template("quote.html", quote=quote)
-        #return jsonify(quote)
+        # return jsonify(quote)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -273,14 +271,12 @@ def sell():
         else:
             # Record sale in purchases table by adding row with negative number of shares
             db.execute("""INSERT INTO purchases (username, symbol, shares, price)\
-                VALUES (?, ?, ?, ?)""",
-                    holdings[0]["username"], symbol, -shares, quote['price'])
+                VALUES (?, ?, ?, ?)""", holdings[0]["username"], symbol, -shares, quote['price'])
 
             # Add value of sale back to cash in users table
             db.execute("""UPDATE users\
                 SET cash = cash + ?\
-                WHERE id = ?""",
-                    shares * quote['price'], session['user_id'])
+                WHERE id = ?""", shares * quote['price'], session['user_id'])
             return redirect("/")
 
 
