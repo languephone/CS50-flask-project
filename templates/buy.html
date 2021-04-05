@@ -15,7 +15,7 @@
         </form>
     </div>
     <div>
-        <h5>Cash on hand: {{ cash }}</h5>
+        <h5>Cash on hand: {{ cash | usd }}</h5>
     </div>
     {% if quote %}
     <div class="section">

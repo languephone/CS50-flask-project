@@ -6,7 +6,7 @@
 
 {% block main %}
     <div class="section">
-        <h1>Welcome {{ user }}</h1>
+        <h1>Welcome {{ user[0]['username'] }}</h1>
     </div>
     <div class="section">
         <table class="table">
@@ -25,8 +25,8 @@
                     <td>{{ share['symbol'] }}</td>
                     <td>{{ share['name'] }}</td>
                     <td>{{ share['shares'] }}</td>
-                    <td>{{ share['price'] }}</td>
-                    <td>{{ share['value'] }}</td>
+                    <td>{{ share['price'] | usd }}</td>
+                    <td>{{ share['value'] | usd }}</td>
                 </tr>
                 {% endfor %}
                 <tr>
@@ -34,7 +34,7 @@
                     <td><strong>Cash</strong></td>
                     <td></td>
                     <td></td>
-                    <td><strong>{{ cash }}</strong></td>
+                    <td><strong>{{ user[0]['cash'] | usd}}</strong></td>
                 </tr>
             </tbody>
             <tfoot>
@@ -43,7 +43,7 @@
                     <td><strong>Total Value</strong></td>
                     <td></td>
                     <td></td>
-                    <td><strong>{{ account }}</strong></td>
+                    <td><strong>{{ account | usd }}</strong></td>
                 </tr>
             </tfoot>
         </table>

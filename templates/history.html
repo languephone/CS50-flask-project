@@ -29,7 +29,7 @@
                     <td>{{ transaction['datetime'] }}</td>
                     <td>{{ transaction['symbol'] }}</td>
                     <td>{{ transaction['shares'] }}</td>
-                    <td>{{ transaction['price'] }}</td>
+                    <td>{{ transaction['price'] | usd}}</td>
                     <td>{{ transaction['buy_sell'] }}</td>
                 </tr>
                 {% endfor %}

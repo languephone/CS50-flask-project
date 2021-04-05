@@ -56,11 +56,11 @@ def index():
     account = cash
     for share in shares:
         share_info = lookup(share['symbol'])
-        share['price'] = usd(share_info['price'])
+        share['price'] = share_info['price']
         share['name'] = share_info['name']
-        share['value'] = usd(share_info['price'] * share['shares'])
+        share['value'] = share_info['price'] * share['shares']
         account += share_info['price'] * share['shares']
-    return render_template("index.html", user=user[0]['username'], shares=shares, cash=usd(user[0]['cash']), account=usd(account))
+    return render_template("index.html", user=user, shares=shares, account=account)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -71,7 +71,7 @@ def buy():
     rows = db.execute("SELECT * FROM users WHERE id = ?", session['user_id'])
     cash = rows[0]['cash']
     if request.method == "GET":
-        return render_template("buy.html", cash=usd(cash))
+        return render_template("buy.html", cash=cash)
     else:
         symbol = request.form.get("symbol").upper()
         shares = request.form.get("shares")
@@ -113,9 +113,6 @@ def history():
     """Show history of transactions"""
     username = db.execute("SELECT username FROM users WHERE id = ?", session['user_id'])[0]['username']
     transactions = db.execute("SELECT * FROM purchases WHERE username = ?", username)
-    # Clean and format data
-    for transaction in transactions:
-        transaction['price'] = usd(transaction['price'])
     return render_template("history.html", transactions=transactions, username=username)
 
 
