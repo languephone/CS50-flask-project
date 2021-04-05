@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Welcome
+{% endblock %}
+
+{% block main %}
+    <div class="section">
+        <h1>Welcome {{ user }}</h1>
+    </div>
+    <div class="section">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Shares</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for share in shares %}
+                <tr>
+                    <td>{{ share['symbol'] }}</td>
+                    <td>{{ share['name'] }}</td>
+                    <td>{{ share['shares'] }}</td>
+                    <td>{{ share['price'] }}</td>
+                    <td>{{ share['value'] }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td><strong>Cash</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>{{ cash }}</strong></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class='table-dark'>
+                    <td></td>
+                    <td><strong>Total Value</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>{{ account }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}

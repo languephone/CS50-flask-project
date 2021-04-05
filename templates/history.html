@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Trading History
+{% endblock %}
+
+{% block main %}
+    <div class="section">
+        <h1>{{ username }}'s trading history</h1>
+    </div>
+    <div class="section">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Date/Time</th>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Shares</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Buy/Sell</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                {% if transaction['buy_sell'] == 'sell' %}
+                <tr class="table-danger">
+                {% else %}
+                <tr class="table-success">
+                {% endif %}
+                    <td>{{ transaction['datetime'] }}</td>
+                    <td>{{ transaction['symbol'] }}</td>
+                    <td>{{ transaction['shares'] }}</td>
+                    <td>{{ transaction['price'] }}</td>
+                    <td>{{ transaction['buy_sell'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

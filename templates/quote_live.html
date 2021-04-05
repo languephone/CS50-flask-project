@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Get stock quote
+{% endblock %}
+
+{% block main %}
+    <div class="section">
+        <form action="/quote" method="post">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="symbol" placeholder="Stock symbol" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Get Quote</button>
+        </form>
+    </div>
+    {% if quote %}
+    <div class="section">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ quote['symbol'] }}</td>
+                    <td>{{ quote['name'] }}</td>
+                    <td>{{ price }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}
