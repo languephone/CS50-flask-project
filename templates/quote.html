@@ -27,7 +27,7 @@
                 <tr>
                     <td>{{ quote['symbol'] }}</td>
                     <td>{{ quote['name'] }}</td>
-                    <td>{{ price }}</td>
+                    <td>{{ quote['price'] | usd }}</td>
                 </tr>
             </tbody>
         </table>
