@@ -61,17 +61,16 @@ def index():
 
     # Calculate gain/loss for current holdings by getting cost for current shares (FIFO method)
     for holding in holdings:
-    	shares_counted = 0
-    	cost = 0
-    	for transaction in transactions:
-    		if transaction['symbol'] == holding['symbol'] and transaction['buy_sell'] == 'buy':
-    			for i in range(transaction['shares']):
-    				if shares_counted >= holding['shares']:
-    					break
-    				cost += transaction['price']
-    				shares_counted += 1
-
-    	holding['cost'] = cost
+        shares_counted = 0
+        cost = 0
+        for transaction in transactions:
+            if transaction['symbol'] == holding['symbol'] and transaction['buy_sell'] == 'buy':
+                for i in range(transaction['shares']):
+                    if shares_counted >= holding['shares']:
+                        break
+                    cost += transaction['price']
+                    shares_counted += 1
+        holding['cost'] = cost
 
     # Get user cash info
     user = db.execute("SELECT * FROM users WHERE id = ?", session['user_id'])
@@ -132,6 +131,7 @@ def buy():
                 SET cash = cash - ?\
                 WHERE id = ?""", int(shares) * quote['price'], session['user_id'])
             return redirect("/")
+
 
 @app.route("/funds", methods=["GET", "POST"])
 @login_required
